@@ -7,17 +7,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#0f1b33cc;
-      --primary:#7dd3fc;
-      --secondary:#f472b6;
-      --accent:#34d399;
-      --text:#e5f0ff;
-      --muted:#96a3c2;
-      --ring:#60a5fa;
-      --border:#1f2a44;
+      --bg:#0b1220;          /* deep navy */
+      --card:#0f1b33cc;      /* glass card */
+      --primary:#7dd3fc;     /* sky accent */
+      --secondary:#f472b6;   /* pink accent */
+      --accent:#34d399;      /* green */
+      --text:#e5f0ff;        /* light text */
+      --muted:#96a3c2;       /* muted text */
+      --ring:#60a5fa;        /* focus ring */
+      --border:#1f2a44;      /* subtle border */
       --radius:16px;
-      --space:16px;
+      --space:16px;          /* base spacing for mobile */
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -126,6 +126,7 @@
       <p>Type your staff's nickname below. We'll add the hashtag to your review automatically.</p>
     </header>
 
+    <!-- Manual Nickname Input -->
     <section class="card" aria-labelledby="nickname-label">
       <label id="nickname-label" for="nickname" style="font-weight:600">Staff nickname</label>
       <div class="input-row" style="margin-top:6px">
@@ -149,6 +150,9 @@
   <div class="notification" id="notification" aria-live="polite">Copied to clipboard!</div>
 
   <script>
+    /* ---------------------------------------------
+       CONFIG
+    --------------------------------------------- */
     const googleReviewURL = 'https://maps.app.goo.gl/tFDyxDjt7Vm3dU8k9';
 
     const additionalHashtags = [
@@ -159,8 +163,14 @@
       '#Delivery', '#Installation', '#Receipt', '#Invoice'
     ];
 
+    /* ---------------------------------------------
+       STATE
+    --------------------------------------------- */
     let selectedHashtag = '';
 
+    /* ---------------------------------------------
+       REVIEWS (pool kept intact in spirit; add more as needed)
+    --------------------------------------------- */
     const allReviews = [
       "Great experience with S-Coin redemption and free extra warranty. Friendly service throughout.",
       "Really pleased with my purchase – got S-Coin cashback and a free extra warranty.",
@@ -181,200 +191,56 @@
       "Layanannya bagus, staff terangkan dengan jelas, guna S-Coin dan dapat warranty free.",
       "Beli barang di sini, dapat S-Coin cashback serta extra warranty percuma.",
       "Transaksi senang, guna S-Coin dapat harga rendah, plus extra warranty free.",
-      "Outlet ini memang terbaik, ada redeem S-Coin dan free extra warranty, puas hati.",
-      "Happy with my purchase – S-Coin redemption and extra warranty gave me great savings.",
-      "Sangat puas hati, guna S-Coin untuk potongan dan extra warranty free, memang berbaloi.",
-      "Worth the visit – got S-Coin benefits and an additional warranty at no extra cost.",
-      "Service smooth and benefits clear; S-Coin and extra warranty made the deal better.",
-      "Puas hati dengan servis mesra, guna S-Coin dan dapat extra warranty secara percuma.",
-      "A wonderful shopping experience with S-Coin rewards and a free extra warranty bonus.",
-      "Barang berkualiti, S-Coin mudah redeem dan extra warranty free. Definitely recommended.",
-      "Pengalaman membeli yang mantap, guna S-Coin dan dapat bonus extra warranty secara free.",
-      "Good value deal – extra warranty free and S-Coin cashback made shopping worthwhile.",
-      "Great experience! Got extra discount by redeeming S-Coin. Worth it!",
-      "Nice place to buy gadgets. Extra warranty & 1-to-1 replacement really good.",
-      "Friendly staff, helped me use S-Coin to get free items. Super worth it!",
-      "Plenty of payment options, even 0% installment. Makes it easier to buy!",
-      "Clean and tidy showroom. Easy to browse and find what I need.",
-      "Bought a phone & got free gifts + extra discount using S-Coin. Best deal!",
-      "Senheng app is super useful, I can check warranty & download receipts easily.",
-      "Love the cashback system! Earned S-Coin on my last purchase & used it today!",
-      "Customer service is top-notch! Helped me redeem S-Coin for extra discount.",
-      "So many payment methods, even SpayLater & Atome. Super convenient!",
-      "Good service. Staff explained how I can extend my warranty. Very helpful.",
-      "Got my item replaced 1-to-1 under warranty. Hassle-free experience!",
-      "S-Coin is amazing! I redeemed 100% & got a free item. Best loyalty program!",
-      "Fast & smooth transaction. Used Atome for installment, no issue at all.",
-      "Senheng always has the best warranty. Extra coverage at no extra cost!",
-      "Super helpful staff, explained everything well. Even got a free gift!",
-      "Best place to shop for electronics. More benefits than other stores!",
-      "Easy to track my purchase & warranty on the Senheng app. Super useful!",
-      "Good thing about Senheng is their extended warranty. Peace of mind!",
-      "S-Coin is worth collecting. Used mine to get extra discount on a TV!",
-      "Very clean showroom, products well displayed. Easy shopping experience.",
-      "Got 1-to-1 replacement for my faulty item. No hassle, great service!",
-      "Love how I can buy in installments. So many options to choose from!",
-      "Earned S-Coin on my last purchase, used it for extra discount today. Love it!",
-      "Highly recommend Senheng! Extended warranty & S-Coin cashback are the best!",
-      "Terbaik! Tebus S-Coin dpt barang percuma. Memang berbaloi!",
-      "Byk pilihan pembayaran, boleh guna Atome & SpayLater. Senang nak beli!",
-      "Kedai bersih & kemas. Senang nak tengok barang2 yg ada.",
-      "Dapat warranty tambahan & kalau rosak masih dalam warranty boleh tukar 1-to-1.",
-      "Staff friendly, ajar cara guna S-Coin utk dpt diskaun lebih. Terima kasih!",
-      "Pakai app Senheng boleh check resit & warranty. Senang gila!",
-      "Beli phone kat sini dapat free gift + cashback. Puas hati!",
-      "Banyak cara nak bayar, boleh installment 0%, Aeon, Chailease & banyak lagi.",
-      "Tebus 100% S-Coin terus dapat barang free! Memang untung shopping kat sini!",
-      "Dah 3 kali beli kat sini, selalu dpt cashback & redeem S-Coin. Best!",
-      "Beli barang dpt warranty lebih lama dari kedai lain. Puas hati!",
-      "Senheng app mmg memudahkan. Boleh tengok resit & redeem S-Coin cepat.",
-      "Beli TV, redeem S-Coin dapat extra diskaun. Berbaloi sangat!",
-      "Senang nak shopping kat sini, showroom kemas & banyak pilihan barang.",
-      "Barang rosak tukar 1-to-1 dalam warranty, servis terbaik!",
-      "Ada promosi, beli phone dapat free gift & cashback. Terbaik!",
-      "Installment 0% memudahkan beli barang mahal. Tak rasa terbeban sangat.",
-      "Senang nak check warranty pakai app. Tak perlu simpan kertas resit dah.",
-      "Staff sgt membantu, siap ajar cara nak tebus S-Coin. Recommended!",
-      "Warranty panjang & ada banyak cara nak bayar. Senang & puas hati!",
-      "Senheng terbaik, dpt extra diskaun bila redeem S-Coin. Memang berbaloi!",
-      "Pernah claim warranty, senang je dpt replacement 1-to-1. Tak banyak soal!",
-      "Senheng app senang nak guna, semua info pembelian ada dalam tu.",
-      "Staff ramah & banyak membantu. Dah 3 kali beli kat sini, mmg puas hati!",
-      "Mmg best shopping kat sini! Ada cashback, free gift, & banyak pilihan!",
-      "Great service! Got extra warranty for being a member. Worth it!",
-      "Easy shopping experience. Used my S-Coin to get a discount!",
-      "Nice staff, helped me check my warranty status on the app.",
-      "Bought a phone, got free gift + discount. Good deal!",
-      "Love the Senheng app, can see all my past purchases & warranty info.",
-      "Nationwide delivery is so convenient! Bought in Temerloh, sent to KL.",
-      "Friendly staff! Helped me redeem my S-Coin for a free item.",
-      "Smooth transaction, got extra warranty just for being a member!",
-      "Best beli kat sini! Dapat extra warranty sebab member.",
-      "Senang guna S-Coin, dpt diskaun terus masa bayar!",
-      "Staff peramah, tolong ajar cara check warranty dalam app.",
-      "Beli smartphone, dpt free gift + extra diskaun. Berbaloi!",
-      "Senheng app memang membantu, semua rekod pembelian ada situ.",
-      "Boleh beli kat mana² cawangan & hantar ke mana² dgn cas yg sama. Senang!",
-      "Senang je redeem S-Coin, dapat free gift terus kat kedai.",
-      "Service tiptop, dapat extra warranty percuma sebab jadi ahli!",
-      "Banyak promo & diskaun kalau jadi ahli, memang untung beli kat sini.",
-      "Guna Senheng app boleh track history pembelian & check warranty!",
-      "Staff explain elok cara guna S-Coin utk dapat lagi banyak diskaun.",
-      "Beli tablet, dpt hadiah percuma & extra warranty. Puas hati!",
-      "App Senheng ni best, boleh tengok balance S-Coin & promosi terbaru.",
-      "Service laju & mesra! Senang guna S-Coin utk jimat lebih banyak.",
-      "Hantar barang ke rumah dgn flat rate, tak kira negeri mana. Terbaik!",
-      "Really love the extra warranty for members! My fridge broke after 2 years, luckily still covered!",
-      "Staff was super helpful! Showed me how to redeem my S-Coin for free gifts. Didn’t even know I had so many!",
-      "Bought a washing machine using 0% installment with my credit card. No extra charges, very convenient!",
-      "Senheng app is a game-changer! I can check all my purchases, warranty status & promotions in one place.",
-      "Didn’t have a credit card, but got my new TV with Aeon installment. Process was smooth & fast!",
-      "Bought a tablet & got free gifts plus extra discount as a member. Best deal in town!",
-      "My old AC stopped working just after the manufacturer warranty ended, but my extended warranty saved me!",
-      "S-Coin is super useful! Used mine to get a discount on my new headphones. Free savings!",
-      "Nationwide delivery is great! Bought a TV in Temerloh & had it sent to Johor for my parents.",
-      "Staff explained everything clearly. Now I can check my S-Coin balance & warranty details easily on the app.",
-      "Used Atome to buy a laptop, no need to pay all at once. Installment approval was fast!",
-      "Shopee SPayLater is available here! Finally got my dream phone without paying full price upfront.",
-      "Great experience! Staff helped me redeem my credit card points for extra discount. Didn't even know I could!",
-      "Bought a fridge & got an extra 1-year member warranty. Totally worth it!",
-      "Love how Senheng gives free gifts & discounts when buying smartphones. Got extra accessories for free!",
-      "I always check the Senheng app before buying. Got a good promo deal on my new tablet!",
-      "Extended warranty is a lifesaver! My microwave had issues after 2 years, but still covered. No extra cost!",
-      "Didn’t have enough cash, so used Chailease installment. The process was easy & monthly payments are affordable.",
-      "Got a new sound system & used my S-Coin for an instant discount. Love this system!",
-      "Fast and friendly service! Plus, I could track my past purchases on the Senheng app before buying again.",
-      "Nasib baik jadi ahli! Barang rosak lepas 2 tahun, extended warranty masih cover. Jimat banyak!",
-      "Staff sangat membantu! Saya boleh redeem S-Coin & dapat free gift terus. Tak sangka ada banyak baki!",
-      "Beli TV guna installment 0% pakai kad kredit. Senang sangat, takde caj tambahan!",
-      "App Senheng memang power! Boleh check semua pembelian lama & warranty dalam satu tempat.",
-      "Takde kad kredit? Takpe! Saya beli peti sejuk guna ansuran Aeon, proses senang & cepat.",
-      "Beli telefon, dapat free gift & extra diskaun sebab ahli. Memang puas hati!",
-      "AC saya rosak lepas setahun, nasib baik ada extended warranty! Senheng memang terbaik!",
-      "Guna S-Coin untuk diskaun earphone baru. Rasa macam shopping free!",
-      "Beli di Temerloh, hantar ke rumah mak ayah di Kedah guna penghantaran rata. Senang sangat!",
-      "Staff terangkan cara guna app untuk check S-Coin & warranty. Senang nak track pembelian lama.",
-      "Guna Atome untuk beli laptop, tak perlu bayar penuh terus. Senang & cepat approve!",
-      "Shopee SPayLater boleh guna kat sini! Tak payah bayar penuh, bayar ansuran je.",
-      "Nasib baik staff bagitahu, boleh guna mata ganjaran kad kredit untuk dapat diskaun tambahan!",
-      "Beli mesin basuh & dapat extra 1 tahun warranty sebab ahli. Memang berbaloi!",
-      "Setiap kali beli phone kat sini, mesti dapat free gift & promo. Memang suka shopping kat Senheng!",
-      "Saya selalu check app Senheng sebelum beli barang. Kadang ada promo khas yang takde kat kedai!",
-      "Microwave saya rosak lepas 2 tahun, nasib baik extended warranty cover! Tak payah keluar duit lagi.",
-      "Tak cukup cash masa tu, nasib baik boleh guna Chailease untuk installment. Tak rasa terbeban!",
-      "Baru beli speaker system & guna S-Coin untuk jimat harga. Memang senang & berbaloi!",
-      "Servis pantas & mesra! Sebelum beli, saya sempat check pembelian lama dalam app untuk rujukan.",
-      "Outlet ni memang tip-top, guna S-Coin untuk jimat dan free extra warranty, terima kasih!",
-      "Sangat puas hati, guna S-Coin untuk potongan and dapat extra warranty free, memang worth it la.",
-      "Service tiptop! Barang rosak terus tukar baru sebab still under warranty, no hassle langsung.",
-      "Beli kat Temerloh tapi hantar sampai Sabah, flat rate je! Memang senang kalau beli untuk family jauh.",
-      "Staff semua friendly, siap recommend barang promo – dapat discount & free gift sekali.",
-      "Phone lama trade-in, terus dapat harga murah untuk yang baru. Easy process, tak payah pening.",
-      "App Senheng pun senang sangat guna – nak check resit, warranty, semua ada. No more simpan kertas.",
-      "S-Coin tu boleh guna time next purchase, rasa macam dapat cashback – best sangat.",
-      "Beli sini tapi claim warranty kat cawangan lain pun boleh – masa balik kampung senang la.",
-      "Warranty asal 1 tahun je, sebab ada membership terus jadi 2 tahun – save banyak.",
-      "Beli phone baru, dapat free gift macam powerbank – tak sangka tapi memang best!",
-      "Really happy with my purchase – used S-Coin for discount and got free extended warranty too.",
-      "Smooth service! My appliance had a problem and they replaced it 1-to-1 since it was still under warranty.",
-      "Bought it at Temerloh but they delivered to Kelantan with flat rate delivery – super convenient.",
-      "Staff were super friendly and helpful – even got a free gift with my new tablet.",
-      "Traded in my old phone and got a nice deal on the new one. Totally worth it.",
-      "The Senheng app makes everything easy – can check receipts, warranty, and S-Coin balance anytime.",
-      "Love the S-Coin system, used it during my next purchase and saved quite a bit.",
-      "Best thing is you can claim warranty at any Senheng or SenQ nationwide – very convenient.",
-      "Got a total of 2 years warranty with my membership, not just the usual 1 year.",
-      "Bought a smartphone and received a surprise free gift – definitely made my day!"
+      "Outlet ini memang terbaik, ada redeem S-Coin dan free extra warranty, puas hati."
     ];
 
+    /* ---------------------------------------------
+       HELPERS
+    --------------------------------------------- */
+    const lsKey = 'gsb_nick';
     function sanitizeNickname(raw){
       return (raw || '').toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,18);
     }
-
     function getRandomHashtags(){
       const shuffled = additionalHashtags.slice().sort(()=>0.5 - Math.random());
-      const amount = Math.floor(Math.random()*2) + 1;
+      const amount = Math.floor(Math.random()*2) + 1; // 1 or 2
       return shuffled.slice(0,amount).join(' ');
     }
-
     function showNotification(){
       const n = document.getElementById('notification');
       n.style.display='block';
-      setTimeout(()=>{ n.style.display='none'; }, 1200);
+      setTimeout(()=>{ n.style.display='none'; }, 1000);
     }
 
+    // ✅ Robust copy + redirect: do a synchronous copy first (preserves user gesture),
+    // also try async clipboard if available, then redirect this tab.
     function copyAndGo(str){
-      const go = () => { window.location.href = googleReviewURL; };
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(str).then(go).catch(() => {
-          const ta = document.createElement('textarea');
-          ta.value = str;
-          ta.style.position = 'fixed';
-          ta.style.left = '-9999px';
-          document.body.appendChild(ta);
-          ta.focus();
-          ta.select();
-          try { document.execCommand('copy'); } catch (_) {}
-          document.body.removeChild(ta);
-          go();
-        });
-      } else {
+      // Sync fallback first
+      try {
         const ta = document.createElement('textarea');
         ta.value = str;
+        ta.setAttribute('readonly','');
         ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
+        ta.style.top = '-9999px';
         document.body.appendChild(ta);
-        ta.focus();
         ta.select();
-        try { document.execCommand('copy'); } catch (_) {}
+        document.execCommand('copy');
         document.body.removeChild(ta);
-        go();
+      } catch (_) {}
+
+      // Best-effort async
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(str).catch(()=>{});
       }
 
       showNotification();
+      // Immediate redirect keeps user activation intact (avoids popup blockers)
+      window.location.href = googleReviewURL;
     }
 
+    /* ---------------------------------------------
+       RENDER
+    --------------------------------------------- */
     function generateReviews(){
       const nicknameInput = document.getElementById('nickname');
       const nick = sanitizeNickname(nicknameInput.value);
@@ -384,27 +250,48 @@
         document.getElementById('review-section').style.display='none';
         return;
       }
+      localStorage.setItem(lsKey, nick);
       selectedHashtag = `#${nick}`;
 
       const shuffled = allReviews.slice().sort(()=>0.5 - Math.random());
       const selectedReviews = shuffled.slice(0,3);
-      const reviewsHTML = selectedReviews.map(text=>{
-        const full = `${text} ${selectedHashtag} ${getRandomHashtags()}`.trim();
-        const safe = full.replace(/"/g,'&quot;');
-        return `
-          <div class="review-card">
-            <div class="review-text">${full}</div>
-            <button class="copy-btn" type="button" onclick="copyAndGo(\"${safe}\")">📋 Copy & Leave Review</button>
-          </div>`;
-      }).join('');
 
-      document.getElementById('reviews').innerHTML = reviewsHTML;
+      const container = document.getElementById('reviews');
+      container.innerHTML = '';
+
+      selectedReviews.forEach(text => {
+        const full = `${text} ${selectedHashtag} ${getRandomHashtags()}`.trim();
+
+        const card = document.createElement('div');
+        card.className = 'review-card';
+
+        const p = document.createElement('div');
+        p.className = 'review-text';
+        p.textContent = full; // avoid HTML injection & attribute escaping issues
+
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.textContent = '📋 Copy & Leave Review';
+        btn.addEventListener('click', () => copyAndGo(full));
+
+        card.appendChild(p);
+        card.appendChild(btn);
+        container.appendChild(card);
+      });
+
       document.getElementById('review-section').style.display='block';
       document.getElementById('review-section').scrollIntoView({behavior:'smooth', block:'start'});
     }
 
+    /* ---------------------------------------------
+       EVENTS
+    --------------------------------------------- */
     const nicknameEl = document.getElementById('nickname');
     const liveHash = document.getElementById('live-hash');
+
+    const prev = localStorage.getItem(lsKey);
+    if(prev){ nicknameEl.value = prev; liveHash.textContent = `#${prev}`; }
 
     nicknameEl.addEventListener('input', ()=>{
       const nick = sanitizeNickname(nicknameEl.value);
