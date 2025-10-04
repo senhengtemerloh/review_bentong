@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Leave a Google Review - Grand Senheng Bentong</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bg:#0b1220;
-      --card:#0f1b33cc;
-      --primary:#7dd3fc;
-      --secondary:#f472b6;
-      --accent:#34d399;
-      --text:#e5f0ff;
-      --muted:#96a3c2;
-      --ring:#60a5fa;
-      --border:#1f2a44;
+      --bg:#0b1220;          /* deep navy */
+      --card:#0f1b33cc;      /* glass card */
+      --primary:#7dd3fc;     /* sky accent */
+      --secondary:#f472b6;   /* pink accent */
+      --accent:#34d399;      /* green */
+      --text:#e5f0ff;        /* light text */
+      --muted:#96a3c2;       /* muted text */
+      --ring:#60a5fa;        /* focus ring */
+      --border:#1f2a44;      /* subtle border */
+      --radius:16px;
+      --space:16px;          /* base spacing for mobile */
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -27,86 +29,91 @@
         radial-gradient(1200px 1200px at 10% 0%, #183057 0%, transparent 50%),
         radial-gradient(1000px 1000px at 100% 0%, #3b1856 0%, transparent 50%),
         linear-gradient(180deg,#0b1220 0%,#0b1220 100%);
-      padding:24px;
+      padding:calc(var(--space) + env(safe-area-inset-top)) var(--space) calc(var(--space) + env(safe-area-inset-bottom));
     }
 
-    .container{max-width:720px;margin:0 auto}
+    .container{max-width:min(720px, 100%);margin:0 auto}
 
-    header{ text-align:center; margin: 12px 0 28px; }
+    header{ text-align:center; margin: 8px 0 18px; }
     header h1{
-      font-size: clamp(1.6rem, 2.4vw + 1rem, 2.2rem);
-      font-weight:700; letter-spacing:0.5px;
+      font-size: clamp(1.25rem, 2.6vw + 1rem, 2rem);
+      font-weight:700; letter-spacing:0.4px;
+      line-height:1.2;
       background: linear-gradient(90deg,var(--primary),var(--secondary));
       -webkit-background-clip:text; background-clip:text; color:transparent;
     }
-    header p{color:var(--muted); margin-top:8px; font-size:0.98rem}
+    header p{color:var(--muted); margin-top:8px; font-size:0.95rem}
 
     .card{
       background:var(--card);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: var(--radius);
+      padding: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
 
-    .input-row{display:flex; gap:10px; align-items:center; margin-top:8px}
-    .input-row .hash{font-weight:600; color:var(--muted); padding: 12px 10px;}
+    .input-row{display:flex; gap:10px; align-items:center; margin-top:6px}
+    .input-row .hash{font-weight:600; color:var(--muted); padding: 12px 10px; border-radius:12px}
 
     input[type="text"]{
       flex:1;
       background: rgba(255,255,255,0.06);
       border:1px solid var(--border);
       color:var(--text);
-      border-radius:12px; height:44px; padding:0 12px;
+      border-radius:12px; min-height:48px; padding:0 12px;
       outline:none; transition:border .15s, box-shadow .15s;
+      font-size:1rem;
     }
     input[type="text"]:focus{
       border-color: var(--ring);
       box-shadow: 0 0 0 4px rgba(96,165,250,0.25);
     }
-    .hint{font-size:.85rem; color:var(--muted); margin-top:8px}
+    .hint{font-size:.9rem; color:var(--muted); margin-top:8px}
 
     .btn{ 
-      border:none; cursor:pointer; font-weight:600; color:#0a1220;
+      border:none; cursor:pointer; font-weight:700; color:#0a1220;
       background: linear-gradient(90deg,var(--primary), var(--secondary));
-      padding: 12px 16px; border-radius:12px; transition: transform .06s ease;
+      padding: 14px 16px; border-radius:12px; transition: transform .06s ease;
       box-shadow: 0 6px 20px rgba(125,211,252,.25);
-      white-space:nowrap;
+      white-space:nowrap; min-height:48px; touch-action:manipulation;
     }
     .btn:active{ transform: scale(.98); }
 
-    #review-section{ display:none; margin-top:22px }
+    #review-section{ display:none; margin-top:16px }
 
     .review-card{
       background: rgba(255,255,255,0.06);
       border:1px solid var(--border);
-      border-radius:16px; padding:16px; margin-top:14px;
+      border-radius:var(--radius); padding:14px; margin-top:12px;
     }
-    .review-text{ font-size:1.05rem; line-height:1.55; }
+    .review-text{ font-size:1.05rem; line-height:1.55; word-break:break-word }
 
     .copy-btn{
-      margin-top:12px; width:100%; color:#051019; font-weight:700;
+      margin-top:12px; width:100%; color:#051019; font-weight:800;
       background: linear-gradient(90deg,#34d399,#a7f3d0);
       border:none; padding:14px; border-radius:12px;
       box-shadow:0 8px 24px rgba(52,211,153,.25);
       transition: transform .06s ease;
+      min-height:48px;
     }
     .copy-btn:active{ transform: scale(.98); }
 
     #refresh-btn{ 
-      display:block; margin:20px auto 0; max-width:360px; width:100%;
+      display:block; margin:16px auto 0; max-width:420px; width:100%;
       background: linear-gradient(90deg,#f59e0b,#f472b6);
-      color:#0a1220; font-weight:700; padding:14px; border-radius:12px; border:none;
+      color:#0a1220; font-weight:800; padding:14px; border-radius:12px; border:none;
       box-shadow:0 8px 24px rgba(245,158,11,.25);
+      min-height:48px;
     }
 
     .notification{
-      position: fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      position: fixed; left:50%; bottom: calc(12px + env(safe-area-inset-bottom)); transform:translateX(-50%);
       background: #101d36; color: var(--text); border:1px solid var(--border);
       padding:12px 16px; border-radius:12px; display:none; z-index:50;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
+      pointer-events:none;
     }
 
     @media (max-width:420px){ .input-row{flex-direction:column; align-items:stretch} .btn{width:100%} }
@@ -119,29 +126,35 @@
       <p>Type your staff's nickname below. We'll add the hashtag to your review automatically.</p>
     </header>
 
+    <!-- Manual Nickname Input -->
     <section class="card" aria-labelledby="nickname-label">
       <label id="nickname-label" for="nickname" style="font-weight:600">Staff nickname</label>
       <div class="input-row" style="margin-top:6px">
         <span class="hash">#</span>
-        <input id="nickname" type="text" inputmode="latin" autocomplete="off" placeholder="e.g. mus, syafiq, hairie" maxlength="18" />
-        <button class="btn" id="start-btn" title="Show reviews">Show Reviews</button>
+        <input id="nickname" type="text" inputmode="latin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. mus, syafiq, hairie" maxlength="18" />
+        <button class="btn" id="start-btn" title="Show reviews" type="button">Show Reviews</button>
       </div>
       <p class="hint">Only letters & numbers are allowed. We'll format it as a hashtag like <strong id="live-hash">#</strong>.</p>
     </section>
 
     <section id="review-section">
-      <header style="text-align:center; margin:18px 0 8px">
-        <h1 style="font-size:1.4rem">Pick a Review</h1>
+      <header style="text-align:center; margin:14px 0 6px">
+        <h1 style="font-size:1.35rem">Pick a Review</h1>
         <p class="hint">Tap copy and you'll be sent to Google Reviews.</p>
       </header>
       <div id="reviews"></div>
-      <button id="refresh-btn">🔄 Show More Reviews</button>
+      <button id="refresh-btn" type="button">🔄 Show More Reviews</button>
     </section>
   </div>
 
-  <div class="notification" id="notification">Copied to clipboard!</div>
+  <div class="notification" id="notification" aria-live="polite">Copied to clipboard!</div>
 
   <script>
+    /* ---------------------------------------------
+       CONFIG
+    --------------------------------------------- */
+    const googleReviewURL = 'https://maps.app.goo.gl/ZaAfp6gnaPzDtKj78';
+
     const additionalHashtags = [
       '#SCoin', '#Extendedwarranty', '#Replacementwarranty', '#O2O',
       '#Online2Offline', '#Credit', '#BNPL', '#BuyNowPayLater',
@@ -150,9 +163,14 @@
       '#Delivery', '#Installation', '#Receipt', '#Invoice'
     ];
 
+    /* ---------------------------------------------
+       STATE
+    --------------------------------------------- */
     let selectedHashtag = '';
-    const googleReviewURL = 'https://maps.app.goo.gl/ZaAfp6gnaPzDtKj78';
 
+    /* ---------------------------------------------
+       REVIEWS (unchanged pool)
+    --------------------------------------------- */
     const allReviews = [
       "Great experience with S-Coin redemption and free extra warranty. Friendly service throughout.",
       "Really pleased with my purchase – got S-Coin cashback and a free extra warranty.",
@@ -210,11 +228,11 @@
       "Highly recommend Senheng! Extended warranty & S-Coin cashback are the best!"
     ];
 
+    /* ---------------------------------------------
+       HELPERS
+    --------------------------------------------- */
     function sanitizeNickname(raw){
-      return (raw || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g,'')
-        .slice(0,18);
+      return (raw || '').toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,18);
     }
 
     function getRandomHashtags(){
@@ -226,9 +244,49 @@
     function showNotification(){
       const n = document.getElementById('notification');
       n.style.display='block';
-      setTimeout(()=>{ n.style.display='none'; }, 1600);
+      setTimeout(()=>{ n.style.display='none'; }, 1200);
     }
 
+    // ⭐ Robust copy + redirect (works on http/https/file, avoids popup blockers)
+    function copyAndGo(str){
+      const go = () => { window.location.href = googleReviewURL; };
+
+      // Try modern clipboard first (secure contexts)
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(str).then(go).catch(() => {
+          // Fallback to legacy method
+          const ta = document.createElement('textarea');
+          ta.value = str;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try { document.execCommand('copy'); } catch (_) {}
+          document.body.removeChild(ta);
+          go();
+        });
+      } else {
+        // Directly use legacy fallback (http/file origins)
+        const ta = document.createElement('textarea');
+        ta.value = str;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        document.body.removeChild(ta);
+        go();
+      }
+
+      // Small, immediate feedback (won't block navigation)
+      showNotification();
+    }
+
+    /* ---------------------------------------------
+       RENDER
+    --------------------------------------------- */
     function generateReviews(){
       const nicknameInput = document.getElementById('nickname');
       const nick = sanitizeNickname(nicknameInput.value);
@@ -248,7 +306,7 @@
         return `
           <div class="review-card">
             <div class="review-text">${full}</div>
-            <button class="copy-btn" onclick="copyText(\"${safe}\")">📋 Copy & Leave Review</button>
+            <button class="copy-btn" type="button" onclick="copyAndGo(\"${safe}\")">📋 Copy & Leave Review</button>
           </div>`;
       }).join('');
 
@@ -257,15 +315,12 @@
       document.getElementById('review-section').scrollIntoView({behavior:'smooth', block:'start'});
     }
 
-    function copyText(str){
-      navigator.clipboard.writeText(str).then(()=>{
-        showNotification();
-        setTimeout(()=> window.open(googleReviewURL,'_blank'), 400);
-      });
-    }
-
+    /* ---------------------------------------------
+       EVENTS
+    --------------------------------------------- */
     const nicknameEl = document.getElementById('nickname');
     const liveHash = document.getElementById('live-hash');
+
     nicknameEl.addEventListener('input', ()=>{
       const nick = sanitizeNickname(nicknameEl.value);
       liveHash.textContent = nick ? `#${nick}` : '#';
@@ -274,6 +329,7 @@
     document.getElementById('start-btn').addEventListener('click', generateReviews);
     document.getElementById('refresh-btn').addEventListener('click', generateReviews);
 
+    // Enter key triggers
     nicknameEl.addEventListener('keydown', (e)=>{
       if(e.key === 'Enter'){ e.preventDefault(); generateReviews(); }
     });
